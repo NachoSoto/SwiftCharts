@@ -50,7 +50,7 @@ open class ChartPointViewBarStacked: ChartPointViewBar {
             }
             
             let path = UIBezierPath(
-                roundedRect: stackFrame.rect.standardized,
+                roundedRect: stackFrame.rect.normalizedRectForRendering(withScale: self.contentScaleFactor),
                 byRoundingCorners: corners,
                 cornerRadii: CGSize(width: self.cornerRadius, height: self.cornerRadius)
             )
@@ -59,5 +59,24 @@ open class ChartPointViewBarStacked: ChartPointViewBar {
             context.addPath(path.cgPath)
             context.fillPath()
         }
+    }
+}
+
+private extension CGRect {
+    func normalizedRectForRendering(withScale scale: CGFloat) -> CGRect {
+        var rect = self.standardized
+        rect.origin.x.round(withScale: scale)
+        rect.origin.y.round(withScale: scale)
+        rect.size.width.round(withScale: scale)
+        rect.size.height.round(withScale: scale)
+        
+        return rect
+    }
+}
+
+private extension CGFloat {
+    mutating func round(withScale scale: CGFloat) {
+        
+//        self = (self * scale).rounded(.awayFromZero) / scale
     }
 }
